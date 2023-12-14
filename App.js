@@ -1,6 +1,48 @@
-import { Text, View, StyleSheet, Image, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Button,
+  Pressable,
+  Modal,
+} from "react-native";
+import { useState } from "react";
 const headimg = require("./assets/headimg.png");
+
+const other = [
+  {
+    key: 1,
+    url: "https://m.media-amazon.com/images/M/MV5BNWU5ZDRmMWItZGU0NC00NzZjLTgzYjctY2RlMzI3OTNkN2U5XkEyXkFqcGdeQXVyMTE0MTY2Mzk2._V1_.jpg",
+    title: "Animal",
+  },
+  {
+    key: 2,
+    url: "https://assets.gadgets360cdn.com/pricee/assets/product/202311/Sam-Bahadur_1699944687.jpg",
+    title: "Sam Bahadur",
+  },
+  {
+    key: 3,
+    url: "https://m.media-amazon.com/images/M/MV5BNjdiNjg5NDQtYTU1Ny00M2VkLWE5OTEtYWI2YWIwNTA2NTZlXkEyXkFqcGdeQXVyMTU0ODI1NTA2._V1_.jpg",
+    title: "Tiger 3",
+  },
+  {
+    key: 4,
+    url: "https://m.media-amazon.com/images/M/MV5BMjMwOTk3ZTYtMTc4Zi00NDFiLWFlZGMtNTVkMTU3MDY1MjU4XkEyXkFqcGdeQXVyOTI3MzI4MzA@._V1_.jpg",
+    title: "Fukrey 3",
+  },
+];
+
 export default function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState();
+
+  const openModal = (data) => {
+    setIsModalOpen(true);
+    setModalContent(data);
+    // console.log("data=>", data);
+  };
   return (
     <View style={styles.home}>
       <ScrollView>
@@ -9,7 +51,12 @@ export default function App() {
         </View>
         <View style={styles.main}>
           <View style={styles.head}>
-            <Image source={headimg} style={styles.headimg} />
+            <Image
+              source={{
+                uri: "https://sprcdn-assets.sprinklr.com/674/8b955864-7307-4d41-8ded-c194170f5305-2729152590.jpg",
+              }}
+              style={styles.headimg}
+            />
             <Text
               style={{
                 color: "white",
@@ -19,46 +66,77 @@ export default function App() {
                 marginTop: 5,
               }}
             >
-              ANIMAL (2023) <Text style={{ color: "#F5C518" }}> - NEW</Text>
+              {/* ANIMAL (2023) <Text style={{ color: "#F5C518" }}> - NEW</Text> */}
             </Text>
           </View>
 
           <View>
-            <Text
-              style={{
-                color: "white",
-                marginTop: 50,
-                fontWeight: 900,
-                marginBottom: 10,
-                left: 30,
-              }}
-            >
-              {" "}
-              Other <Text style={{ color: "#F5C518" }}>New</Text> Arrivals{" "}
-            </Text>
+            <View style={styles.txtBtnFlex}>
+              <Text
+                style={{
+                  color: "white",
+                  marginTop: 50,
+                  fontWeight: 900,
+                  marginBottom: 10,
+                  left: 30,
+                }}
+              >
+                {" "}
+                <Text style={{ color: "#F5C518" }}>New</Text> Arrivals{" "}
+              </Text>
+              {/* <Button
+                title="View more >>"
+                onPress={() => console.log("pressed")}
+              /> */}
+            </View>
+
             <ScrollView contentContainerStyle={styles.other} horizontal>
-              <Image
-                style={styles.otherImage}
-                source={{
-                  uri: "https://assets.gadgets360cdn.com/pricee/assets/product/202311/Sam-Bahadur_1699944687.jpg",
-                }}
-              />
-              <Image
-                style={styles.otherImage}
-                source={{
-                  uri: "https://m.media-amazon.com/images/M/MV5BNjdiNjg5NDQtYTU1Ny00M2VkLWE5OTEtYWI2YWIwNTA2NTZlXkEyXkFqcGdeQXVyMTU0ODI1NTA2._V1_.jpg",
-                }}
-              />
-              <Image
-                style={styles.otherImage}
-                source={{
-                  uri: "https://m.media-amazon.com/images/M/MV5BMjMwOTk3ZTYtMTc4Zi00NDFiLWFlZGMtNTVkMTU3MDY1MjU4XkEyXkFqcGdeQXVyOTI3MzI4MzA@._V1_.jpg",
-                }}
-              />
+              {other &&
+                other.map((d) => (
+                  <Pressable onPress={() => openModal(d)}>
+                    <Image
+                      style={styles.otherImage}
+                      source={{
+                        uri: d.url,
+                      }}
+                    />
+                  </Pressable>
+                ))}
             </ScrollView>
           </View>
+          <Modal
+            animationType="slide" //slide
+            visible={isModalOpen}
+            onRequestClose={() => setIsModalOpen(false)}
+          >
+            <View style={styles.modal}>
+              <Text style={styles.modalTxt}>
+                {" "}
+                {modalContent && modalContent.title}{" "}
+              </Text>
+              <View style={styles.modalImgContainer}>
+                <Image
+                  source={{ uri: modalContent.url }}
+                  style={styles.modalimg}
+                />
+              </View>
+              <Text
+                style={{
+                  color: "white",
+                  left: 30,
+                  top: 30,
+                  fontSize: 15,
+                  fontWeight: "bold",
+                }}
+              >
+                Details
+              </Text>
 
-          <View>
+              {/* <Button title="Close It" onPress={() => setIsModalOpen(false)} /> */}
+            </View>
+          </Modal>
+
+          {/* <View>
             <Text
               style={{
                 color: "white",
@@ -91,8 +169,8 @@ export default function App() {
                 }}
               />
             </ScrollView>
-          </View>
-          <View>
+          </View> */}
+          {/* <View>
             <Text
               style={{
                 color: "white",
@@ -125,7 +203,7 @@ export default function App() {
                 }}
               />
             </ScrollView>
-          </View>
+          </View> */}
         </View>
       </ScrollView>
     </View>
@@ -155,15 +233,17 @@ const styles = StyleSheet.create({
   },
 
   head: {
-    left: 65,
+    // left: 15,
     top: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   headimg: {
-    width: 210,
-    height: 235,
+    width: 350,
+    height: 200,
     borderRadius: 40,
-    marginLeft: 20,
+    // marginLeft: 20,
   },
 
   other: {
@@ -179,5 +259,31 @@ const styles = StyleSheet.create({
     height: 170,
     marginRight: 10,
     borderRadius: 10,
+  },
+
+  txtBtnFlex: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  modal: {
+    backgroundColor: "black",
+    flex: 1,
+  },
+  modalTxt: {
+    color: "white",
+    fontSize: 25,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 15,
+  },
+  modalImgContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+  },
+  modalimg: {
+    width: 210,
+    height: 235,
+    borderRadius: 40,
   },
 });
