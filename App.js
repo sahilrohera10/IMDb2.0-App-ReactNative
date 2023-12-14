@@ -47,7 +47,7 @@ export default function App() {
     <View style={styles.home}>
       <ScrollView>
         <View style={styles.logo}>
-          <Text style={styles.logoText}> IMDb 2.0 </Text>
+          <Text style={styles.logoText}>2.0 </Text>
         </View>
         <View style={styles.main}>
           <View style={styles.head}>
@@ -94,18 +94,20 @@ export default function App() {
               {other &&
                 other.map((d) => (
                   <Pressable onPress={() => openModal(d)}>
-                    <Image
-                      style={styles.otherImage}
-                      source={{
-                        uri: d.url,
-                      }}
-                    />
+                    <View key={d.key}>
+                      <Image
+                        style={styles.otherImage}
+                        source={{
+                          uri: d.url,
+                        }}
+                      />
+                    </View>
                   </Pressable>
                 ))}
             </ScrollView>
           </View>
           <Modal
-            animationType="slide" //slide
+            animationType="none" //slide
             visible={isModalOpen}
             onRequestClose={() => setIsModalOpen(false)}
           >
@@ -116,7 +118,7 @@ export default function App() {
               </Text>
               <View style={styles.modalImgContainer}>
                 <Image
-                  source={{ uri: modalContent.url }}
+                  source={{ uri: modalContent && modalContent.url }}
                   style={styles.modalimg}
                 />
               </View>
@@ -229,7 +231,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     margin: "auto",
     marginTop: 30,
-    left: 10,
+    left: 25,
   },
 
   head: {
