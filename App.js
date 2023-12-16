@@ -6,48 +6,114 @@ import {
   ScrollView,
   Button,
   Pressable,
-  Modal,
+  StatusBar,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
-import { useState } from "react";
-const headimg = require("./assets/headimg.png");
+import Slider from "./Components/slider";
+import useFetch from "./utils/useFetch";
 
-const other = [
-  {
-    key: 1,
-    url: "https://m.media-amazon.com/images/M/MV5BNWU5ZDRmMWItZGU0NC00NzZjLTgzYjctY2RlMzI3OTNkN2U5XkEyXkFqcGdeQXVyMTE0MTY2Mzk2._V1_.jpg",
-    title: "Animal",
-  },
-  {
-    key: 2,
-    url: "https://assets.gadgets360cdn.com/pricee/assets/product/202311/Sam-Bahadur_1699944687.jpg",
-    title: "Sam Bahadur",
-  },
-  {
-    key: 3,
-    url: "https://m.media-amazon.com/images/M/MV5BNjdiNjg5NDQtYTU1Ny00M2VkLWE5OTEtYWI2YWIwNTA2NTZlXkEyXkFqcGdeQXVyMTU0ODI1NTA2._V1_.jpg",
-    title: "Tiger 3",
-  },
-  {
-    key: 4,
-    url: "https://m.media-amazon.com/images/M/MV5BMjMwOTk3ZTYtMTc4Zi00NDFiLWFlZGMtNTVkMTU3MDY1MjU4XkEyXkFqcGdeQXVyOTI3MzI4MzA@._V1_.jpg",
-    title: "Fukrey 3",
-  },
-];
+const other = {
+  results: [
+    {
+      id: 1,
+      primaryImage: {
+        url: "https://m.media-amazon.com/images/M/MV5BNWU5ZDRmMWItZGU0NC00NzZjLTgzYjctY2RlMzI3OTNkN2U5XkEyXkFqcGdeQXVyMTE0MTY2Mzk2._V1_.jpg",
+      },
+      titleText: {
+        text: "Animal",
+      },
+      releaseDate: {
+        day: 1,
+        month: 12,
+        year: 2023,
+      },
+    },
+    {
+      id: 2,
+      primaryImage: {
+        url: "https://assets.gadgets360cdn.com/pricee/assets/product/202311/Sam-Bahadur_1699944687.jpg",
+      },
+      titleText: {
+        text: "Sam Bahadur",
+      },
+      releaseDate: {
+        day: 1,
+        month: 12,
+        year: 2023,
+      },
+    },
+    {
+      id: 3,
+      primaryImage: {
+        url: "https://m.media-amazon.com/images/M/MV5BNjdiNjg5NDQtYTU1Ny00M2VkLWE5OTEtYWI2YWIwNTA2NTZlXkEyXkFqcGdeQXVyMTU0ODI1NTA2._V1_.jpg",
+      },
+      titleText: {
+        text: "Tiger 3",
+      },
+      releaseDate: {
+        day: 12,
+        month: 11,
+        year: 2023,
+      },
+    },
+    {
+      id: 4,
+      primaryImage: {
+        url: "https://m.media-amazon.com/images/M/MV5BMjMwOTk3ZTYtMTc4Zi00NDFiLWFlZGMtNTVkMTU3MDY1MjU4XkEyXkFqcGdeQXVyOTI3MzI4MzA@._V1_.jpg",
+      },
+      titleText: {
+        text: "Fukrey 3",
+      },
+      releaseDate: {
+        day: 23,
+        month: 11,
+        year: 2023,
+      },
+    },
+  ],
+};
 
 export default function App() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState();
+  // const [upcomingMovies , setUpcomingMovies] = useState();
 
-  const openModal = (data) => {
-    setIsModalOpen(true);
-    setModalContent(data);
-    // console.log("data=>", data);
+  const options = {
+    method: "GET",
+    headers: {
+      "X-RapidAPI-Key": "94f183054emshc5ce4b98b71f620p186e99jsnf7c82f10c801",
+      "X-RapidAPI-Host": "moviesdatabase.p.rapidapi.com",
+    },
   };
+
+  const upcomingMovies = useFetch(
+    "https://moviesdatabase.p.rapidapi.com/titles/x/upcoming",
+    options
+  );
+
+  // console.log("data=>", upcomingMovies);
+
   return (
     <View style={styles.home}>
+      <StatusBar />
       <ScrollView>
         <View style={styles.logo}>
-          <Text style={styles.logoText}>2.0 </Text>
+          <Text style={styles.logoText}>v 2.0 </Text>
+          <Pressable
+            onPress={() =>
+              Alert.alert("Coming Soon 🚀", "This feature will be live soon.", [
+                {
+                  text: "cancel",
+                  onPress: () => console.log("cancel pressed"),
+                },
+                {
+                  text: "ok",
+                  onPress: () => console.log("ok pressed"),
+                },
+              ])
+            }
+          >
+            <Text style={[styles.morebtn]}>More</Text>
+          </Pressable>
         </View>
         <View style={styles.main}>
           <View style={styles.head}>
@@ -70,142 +136,20 @@ export default function App() {
             </Text>
           </View>
 
-          <View>
-            <View style={styles.txtBtnFlex}>
-              <Text
-                style={{
-                  color: "white",
-                  marginTop: 50,
-                  fontWeight: 900,
-                  marginBottom: 10,
-                  left: 30,
-                }}
-              >
-                {" "}
-                <Text style={{ color: "#F5C518" }}>New</Text> Arrivals{" "}
-              </Text>
-              {/* <Button
-                title="View more >>"
-                onPress={() => console.log("pressed")}
-              /> */}
-            </View>
-
-            <ScrollView contentContainerStyle={styles.other} horizontal>
-              {other &&
-                other.map((d) => (
-                  <Pressable onPress={() => openModal(d)}>
-                    <View key={d.key}>
-                      <Image
-                        style={styles.otherImage}
-                        source={{
-                          uri: d.url,
-                        }}
-                      />
-                    </View>
-                  </Pressable>
-                ))}
-            </ScrollView>
-          </View>
-          <Modal
-            animationType="none" //slide
-            visible={isModalOpen}
-            onRequestClose={() => setIsModalOpen(false)}
-          >
-            <View style={styles.modal}>
-              <Text style={styles.modalTxt}>
-                {" "}
-                {modalContent && modalContent.title}{" "}
-              </Text>
-              <View style={styles.modalImgContainer}>
-                <Image
-                  source={{ uri: modalContent && modalContent.url }}
-                  style={styles.modalimg}
-                />
-              </View>
-              <Text
-                style={{
-                  color: "white",
-                  left: 30,
-                  top: 30,
-                  fontSize: 15,
-                  fontWeight: "bold",
-                }}
-              >
-                Details
-              </Text>
-
-              {/* <Button title="Close It" onPress={() => setIsModalOpen(false)} /> */}
-            </View>
-          </Modal>
-
-          {/* <View>
-            <Text
-              style={{
-                color: "white",
-                marginTop: 40,
-                fontWeight: 900,
-                marginBottom: 10,
-                left: 30,
-              }}
-            >
-              {" "}
-              Top picks for the day 🎉{" "}
-            </Text>
-            <ScrollView contentContainerStyle={styles.other} horizontal>
-              <Image
-                style={styles.otherImage}
-                source={{
-                  uri: "https://pbs.twimg.com/media/F-pUPryWsAAPzF1?format=jpg&name=small",
-                }}
-              />
-              <Image
-                style={styles.otherImage}
-                source={{
-                  uri: "https://pbs.twimg.com/media/F_oXH-GbQAA9pRA?format=jpg&name=900x900",
-                }}
-              />
-              <Image
-                style={styles.otherImage}
-                source={{
-                  uri: "https://pbs.twimg.com/media/F263V73bAAAmE2Q?format=jpg&name=large",
-                }}
-              />
-            </ScrollView>
-          </View> */}
-          {/* <View>
-            <Text
-              style={{
-                color: "white",
-                marginTop: 40,
-                fontWeight: 900,
-                marginBottom: 10,
-                left: 30,
-              }}
-            >
-              {" "}
-              Top IMDb rated ⭐{" "}
-            </Text>
-            <ScrollView contentContainerStyle={styles.other} horizontal>
-              <Image
-                style={styles.otherImage}
-                source={{
-                  uri: "https://m.media-amazon.com/images/M/MV5BMDQwOTI3NTMtZjA0My00M2E3LThmODUtODdiNTQ3ZjNiNGE3XkEyXkFqcGdeQXVyNTM2NTg3Nzg@._V1_.jpg",
-                }}
-              />
-              <Image
-                style={styles.otherImage}
-                source={{
-                  uri: "https://assets.gadgets360cdn.com/pricee/assets/product/202311/Sam-Bahadur_1699944687.jpg",
-                }}
-              />
-              <Image
-                style={styles.otherImage}
-                source={{
-                  uri: "https://m.media-amazon.com/images/M/MV5BNDY5YWMzOWEtNTVhZi00NTdmLWIxNGItN2Q5ZmIxNGRkZDYyXkEyXkFqcGdeQXVyMTYzMTU3Njgx._V1_FMjpg_UX1000_.jpg",
-                }}
-              />
-            </ScrollView>
-          </View> */}
+          {other ? (
+            <Slider data={other} title="New Arrivals" />
+          ) : (
+            <ActivityIndicator size="large" />
+          )}
+          {upcomingMovies ? (
+            <Slider data={upcomingMovies} title="Upcoming Movies" />
+          ) : (
+            <ActivityIndicator
+              size="large"
+              color="#F5C518"
+              style={{ marginTop: 40 }}
+            />
+          )}
         </View>
       </ScrollView>
     </View>
@@ -220,9 +164,11 @@ const styles = StyleSheet.create({
 
   logo: {
     backgroundColor: "#F5C518",
-    height: 65,
+    height: 45,
     borderRadius: 5,
-    marginTop: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    // marginTop: 10,
   },
 
   logoText: {
@@ -230,12 +176,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     margin: "auto",
-    marginTop: 30,
+    marginTop: 10,
     left: 25,
   },
 
   head: {
-    // left: 15,
     top: 20,
     justifyContent: "center",
     alignItems: "center",
@@ -243,9 +188,8 @@ const styles = StyleSheet.create({
 
   headimg: {
     width: 350,
-    height: 200,
+    height: 120,
     borderRadius: 40,
-    // marginLeft: 20,
   },
 
   other: {
@@ -267,10 +211,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
+
   modal: {
     backgroundColor: "black",
     flex: 1,
   },
+
   modalTxt: {
     color: "white",
     fontSize: 25,
@@ -278,14 +224,43 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 15,
   },
+
   modalImgContainer: {
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,
   },
+
   modalimg: {
     width: 210,
     height: 235,
     borderRadius: 40,
+  },
+
+  morebtn: {
+    color: "black",
+    marginTop: 9,
+    marginRight: 20,
+    fontSize: 16,
+    fontWeight: "bold",
+    borderColor: "black",
+    borderWidth: 2,
+    borderRadius: 5,
+    padding: 2,
+    paddingLeft: 5,
+  },
+
+  boxShadow: {
+    shadowColor: "#333333",
+    shadowOffset: {
+      width: 6,
+      height: 6,
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 4,
+  },
+
+  androidShadow: {
+    elevation: 2,
   },
 });
