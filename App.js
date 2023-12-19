@@ -9,6 +9,9 @@ import {
   StatusBar,
   ActivityIndicator,
   Alert,
+  // Dimensions,
+  useWindowDimensions,
+  SafeAreaView,
 } from "react-native";
 import Slider from "./Components/slider";
 import useFetch from "./utils/useFetch";
@@ -76,6 +79,8 @@ const other = {
 
 export default function App() {
   // const [upcomingMovies , setUpcomingMovies] = useState();
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
 
   const options = {
     method: "GET",
@@ -93,70 +98,95 @@ export default function App() {
   // console.log("data=>", upcomingMovies);
 
   return (
-    <View style={styles.home}>
-      <StatusBar />
-      <ScrollView>
-        <View style={styles.logo}>
-          <Text style={styles.logoText}>v 2.0 </Text>
-          <Pressable
-            onPress={() =>
-              Alert.alert("Coming Soon 🚀", "This feature will be live soon.", [
-                {
-                  text: "cancel",
-                  onPress: () => console.log("cancel pressed"),
-                },
-                {
-                  text: "ok",
-                  onPress: () => console.log("ok pressed"),
-                },
-              ])
-            }
-          >
-            <Text style={[styles.morebtn]}>More</Text>
-          </Pressable>
-        </View>
-        <View style={styles.main}>
-          <View style={styles.head}>
-            <Image
-              source={{
-                uri: "https://sprcdn-assets.sprinklr.com/674/8b955864-7307-4d41-8ded-c194170f5305-2729152590.jpg",
-              }}
-              style={styles.headimg}
-            />
-            <Text
-              style={{
-                color: "white",
-                fontWeight: "bold",
-                fontSize: 15,
-                marginLeft: 43,
-                marginTop: 5,
-              }}
+    <SafeAreaView style={styles.safeContainer}>
+      <View style={styles.home}>
+        <StatusBar />
+        <ScrollView>
+          <View style={styles.logo}>
+            <Text style={styles.logoText}>v 2.0 </Text>
+            <Pressable
+              onPress={() =>
+                Alert.alert(
+                  "Coming Soon 🚀",
+                  "This feature will be live soon.",
+                  [
+                    {
+                      text: "cancel",
+                      onPress: () => console.log("cancel pressed"),
+                    },
+                    {
+                      text: "ok",
+                      onPress: () => console.log("ok pressed"),
+                    },
+                  ]
+                )
+              }
             >
-              {/* ANIMAL (2023) <Text style={{ color: "#F5C518" }}> - NEW</Text> */}
-            </Text>
+              <Text style={[styles.morebtn]}>More</Text>
+            </Pressable>
           </View>
+          <View style={styles.main}>
+            <View style={styles.head}>
+              <Image
+                source={{
+                  uri: "https://sprcdn-assets.sprinklr.com/674/8b955864-7307-4d41-8ded-c194170f5305-2729152590.jpg",
+                }}
+                style={{
+                  width: windowWidth > 500 ? 600 : 350,
+                  height: windowHeight > 500 ? 140 : 160,
+                  borderRadius: 30,
+                }}
+              />
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: 15,
+                  marginLeft: 43,
+                  marginTop: 5,
+                }}
+              >
+                {/* ANIMAL (2023) <Text style={{ color: "#F5C518" }}> - NEW</Text> */}
+              </Text>
+            </View>
 
-          {other ? (
-            <Slider data={other} title="New Arrivals" />
-          ) : (
-            <ActivityIndicator size="large" />
-          )}
-          {upcomingMovies ? (
-            <Slider data={upcomingMovies} title="Upcoming Movies" />
-          ) : (
-            <ActivityIndicator
-              size="large"
-              color="#F5C518"
-              style={{ marginTop: 40 }}
-            />
-          )}
-        </View>
-      </ScrollView>
-    </View>
+            {other ? (
+              <Slider data={other} title="New Arrivals" />
+            ) : (
+              <ActivityIndicator size="large" />
+            )}
+            {upcomingMovies ? (
+              <Slider data={upcomingMovies} title="Upcoming Movies" />
+            ) : (
+              <ActivityIndicator
+                size="large"
+                color="#F5C518"
+                style={{ marginTop: 40 }}
+              />
+            )}
+          </View>
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 }
 
+// for dynamic user interfaces - this Dimensions api does not get update in real time on the change in the dimension
+// const windowWidth = Dimensions.get("window").width;
+// const windowHeight = Dimensions.get("window").height;
+
+// console.log("width=>", windowWidth);
+// console.log("height=>", windowHeight);
+
+// best way to do so is the use of useWindowDimensions hook from react-native
+// const windowWidth = useWindowDimensions().width;
+// const windowHeight = useWindowDimensions().height;
+
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: "black",
+  },
   home: {
     flex: 1,
     backgroundColor: "black",
@@ -187,9 +217,9 @@ const styles = StyleSheet.create({
   },
 
   headimg: {
-    width: 350,
-    height: 120,
-    borderRadius: 40,
+    // width: windowWidth > 500 ? 600 : 350,
+    // height: windowHeight > 500 ? 140 : 160,
+    // borderRadius: 20,
   },
 
   other: {
